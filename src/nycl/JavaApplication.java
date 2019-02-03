@@ -14,7 +14,7 @@ public class JavaApplication
      */
     public static void main(String[] args) throws IOException
     {
-        NYCLParser parser = new NYCLParser(new File("C:\\Users\\apostolis\\Desktop\\apostolis.nycl"));
+        NYCLParser parser = new NYCLParser(new File("resources\\main.nycl"));
         parser.parse();
     }
 }
