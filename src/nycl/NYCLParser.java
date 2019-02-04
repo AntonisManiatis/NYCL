@@ -12,12 +12,15 @@ import java.io.IOException;
  */
 public class NYCLParser
 {
-    private static final String FILE_EXTENSION = "nycl";   
-    private static final String[] RESERVED_KEYWORDS = {"show",  "write"};
-    
-    private static final String VAR_REGEX = "";
+    private static final String FILE_EXTENSION = "nycl";
     
     private final File file;
+    private final Interpreter interpreter = new Interpreter();
+    
+    public NYCLParser(String fileName)
+    {
+		this(new File(fileName));
+	}
     
     public NYCLParser(File file)
     {
@@ -26,39 +29,20 @@ public class NYCLParser
     
     public void parse() throws FileNotFoundException, IOException
     {
-        if (file.exists())
+        String[] parts = file.getName().split("\\.");
+        String extension = parts[parts.length - 1];
+        if (!extension.equals(FILE_EXTENSION))
         {
-            System.out.println("file exists");
-        }
-        else
-        {
-            System.out.println("file doesn't exist");
+        	throw new InvalidFileExtensionException("Can only parse files with .nycl extension!");
         }
         
-        String[] split = file.getName().split("\\.");
-        String extension = split[split.length - 1];
-        if (extension.equals(FILE_EXTENSION))
+        try (BufferedReader br = new BufferedReader(new FileReader(file)))
         {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line = br.readLine();
-            // Variable names (identifiers) can consist of any number of latin characters,
-            // upper or lower case, digits, and the underscore (_). 
-            // The first letter of an identifier cannot be a digit.
-            String[] variables = line.split("\\s*=");
-            String variable = variables[0];
-            
-            if (variable.matches(VAR_REGEX))
-            {
-                
-            }
-            else
-            {
-                
-            }
-        }
-        else
-        {
-            System.out.println("wrong extention");
+        	String currentLine = null;
+			while ((currentLine = br.readLine()) != null)
+			{
+				interpreter.interpret(currentLine);
+			}
         }
     }
 }

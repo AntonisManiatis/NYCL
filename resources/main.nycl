@@ -1,1 +1,13 @@
+#This is a comment thus it should be ignored.
+
 a = 3 + 5
+b = 6 - 3
+c = 5 * 5
+d = 10 / 5
+
+show a
+show b
+show c
+show d
+
+write "Hello friend"

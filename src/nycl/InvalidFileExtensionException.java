@@ -6,5 +6,8 @@ package nycl;
  */
 public class InvalidFileExtensionException extends RuntimeException
 {
-    
+    public InvalidFileExtensionException(String msg)
+    {
+		super(msg);
+	}
 }
