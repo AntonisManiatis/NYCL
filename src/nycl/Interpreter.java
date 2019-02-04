@@ -69,8 +69,8 @@ public class Interpreter
         }
         else
         {
-            String[] variables = line.split("\\s+");
-            String variable = variables[0];
+            String[] expression = line.split("\\s+");
+            String variable = expression[0];
             if (Character.isDigit(variable.charAt(0)))
             {
             	throw new SyntaxException("Variables cannot start with digits.");
@@ -83,9 +83,9 @@ public class Interpreter
             {
             	// The format of any expected line here is expected and it is
             	// num1, any sign, num2
-            	int value1 = Integer.parseInt(variables[2]);
-            	String operator = variables[3];
-            	int value2 = Integer.parseInt(variables[4]);
+            	int value1 = Integer.parseInt(expression[2]);
+            	String operator = expression[3];
+            	int value2 = Integer.parseInt(expression[4]);
             	
             	Operation operation = operations.get(operator);
             	if (operation == null)
