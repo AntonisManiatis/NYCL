@@ -45,14 +45,22 @@ public class Interpreter
 
         if (line.startsWith("show"))
         {
-        	String variable = line.split("\\s+")[1];   	            	
-        	if (variables.containsKey(variable))
+        	try
         	{
-            	System.out.println(variables.get(variable));
+        		String variable = line.split("\\s+")[1];          	
+            	if (variables.containsKey(variable))
+            	{
+                	System.out.println(variables.get(variable));
+            	}
+            	else
+            	{            		
+            		throw new UndeclaredVariableException("Variable " + variable + " has not been declared!");
+            	}
         	}
-        	else
+        	catch (ArrayIndexOutOfBoundsException e)
         	{
-        		throw new UndeclaredVariableException("Variable " + variable + " has not been declared!");
+        		// Either it's stuck to show or show is left empty
+        		throw new SyntaxException("Wrong use of syntax for the show function.");
         	}
         }
         else if (line.startsWith("write"))
@@ -69,7 +77,8 @@ public class Interpreter
         }
         else
         {
-            String[] expression = line.split("\\s+");
+            String[] expression = line.split("\\s*=\\s*");
+            // The left hand side of the expression which contains the variable
             String variable = expression[0];
             if (Character.isDigit(variable.charAt(0)))
             {
@@ -83,18 +92,21 @@ public class Interpreter
             {
             	// The format of any expected line here is expected and it is
             	// num1, any sign, num2
-            	int value1 = Integer.parseInt(expression[2]);
-            	String operator = expression[3];
-            	int value2 = Integer.parseInt(expression[4]);
-            	
-            	Operation operation = operations.get(operator);
-            	if (operation == null)
-            	{
-            		throw new SyntaxException("Operation " + operator + " is unknown!");
-            	}
-            	
-            	// Calculate and store the result for this variable.
-            	this.variables.put(variable, operation.execute(value1, value2));
+            	// TODO: Ideally here we need a regex to check the right hand side
+            	// of the variable and see if the format is correct.
+            	String[] rightHandSide = expression[1].split("\\s+");
+	            int value1 = Integer.parseInt(rightHandSide[0]);
+	            String operator = rightHandSide[1];
+	            int value2 = Integer.parseInt(rightHandSide[2]);
+	            	            	
+	            Operation operation = operations.get(operator);
+	            if (operation == null)
+	            {
+	            	throw new SyntaxException("Operation " + operator + " is unknown!");
+	            }
+	            
+	            // Calculate and store the result for this variable.
+	            this.variables.put(variable, operation.execute(value1, value2));
             }
             else
             {
